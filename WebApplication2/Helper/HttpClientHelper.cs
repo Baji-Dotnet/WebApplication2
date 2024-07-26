@@ -11,13 +11,13 @@ namespace WebApplication2.Helper
     {
         private readonly IConfiguration _configuration;
         private HttpClient _httpClient;
-        private string _businessCentralCustomerCardUrl;
+        private string businessCentralCustomerCardUrl;
 
         public HttpClientHelper(IConfiguration configuration, HttpClient httpClient)
         {
             _configuration = configuration;
             _httpClient = httpClient;
-            _businessCentralCustomerCardUrl = _configuration["OAuthOptions:BusinessCentralCustomerCardUrl"];
+            businessCentralCustomerCardUrl = _configuration["OAuthOptions:BusinessCentralCustomerCardUrl"];
         }
 
         #region Http Proxy Methods
@@ -28,6 +28,7 @@ namespace WebApplication2.Helper
         /// <returns></returns>
         public async Task<CustomerModel> GetAllCustomerDataFromBusinessCentral()
         {
+            var _businessCentralCustomerCardUrl = businessCentralCustomerCardUrl;
             var BearerToken = await GetBearerToken();
             using var requestMessage = new HttpRequestMessage
             {
@@ -49,6 +50,7 @@ namespace WebApplication2.Helper
         public async Task<CustomerModel> GetCustomersByQueryOption(QueryOptions queryOptions)
         {
             var BearerToken = await GetBearerToken();
+            var _businessCentralCustomerCardUrl = businessCentralCustomerCardUrl;
             _businessCentralCustomerCardUrl = $"{_businessCentralCustomerCardUrl}{"?"}{"$"}{queryOptions.FilterOption1}{"="}{queryOptions.NomberOfRows}";
             using var requestMessage = new HttpRequestMessage
             {
@@ -71,6 +73,7 @@ namespace WebApplication2.Helper
         public async Task<CustomerOutputModel> AddCustomerToBusinessCentral(CustomerInput customerInput)
         {
             var BearerToken = await GetBearerToken();
+            var _businessCentralCustomerCardUrl = businessCentralCustomerCardUrl;            
             using var requestMessage = new HttpRequestMessage
             {
                 Method = HttpMethod.Post,
@@ -87,6 +90,7 @@ namespace WebApplication2.Helper
         public async Task<CustomerOutputModel> UpdateCustomerToBusinessCentral(CustomerInput customerInput, string customerId)
         {
             var BearerToken = await GetBearerToken();
+            var _businessCentralCustomerCardUrl = businessCentralCustomerCardUrl;            
             _businessCentralCustomerCardUrl = _businessCentralCustomerCardUrl + "('" + customerId + "')";
             using var requestMessage = new HttpRequestMessage
             {
@@ -110,6 +114,7 @@ namespace WebApplication2.Helper
         public async Task<bool> DeleteCustomerFromBusinessCentral(string customerId)
         {
             var BearerToken = await GetBearerToken();
+            var _businessCentralCustomerCardUrl = businessCentralCustomerCardUrl;
             _businessCentralCustomerCardUrl = _businessCentralCustomerCardUrl + "('" + customerId + "')";
             using var requestMessage = new HttpRequestMessage
             {
